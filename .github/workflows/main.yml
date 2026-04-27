@@ -11,6 +11,26 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Run Codex
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install OpenAI SDK
+        run: npm install openai
+
+      - name: Run Codex Improve
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          echo "Codex workflow running"
+          node -e "
+          import OpenAI from 'openai';
+          const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+          const response = await openai.responses.create({
+            model: 'gpt-4.1-mini',
+            input: 'Analyse ce repo et propose des améliorations'
+          });
+
+          console.log(response.output[0].content[0].text);
+          "
