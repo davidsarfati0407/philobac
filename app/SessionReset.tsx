@@ -5,9 +5,10 @@ import { resetProgress } from "@/lib/localStorage";
 
 export default function SessionReset() {
   useEffect(() => {
-    if (!sessionStorage.getItem("session-initialized")) {
+    if (typeof window === "undefined") return;
+    if (!window.sessionStorage.getItem("session-initialized")) {
       resetProgress();
-      sessionStorage.setItem("session-initialized", "1");
+      window.sessionStorage.setItem("session-initialized", "1");
     }
   }, []);
 
